@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Student Dashboard — SURAJTRADERX</title>
+<title>Student Portal — SURAJTRADERX</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" type="image/jpeg" href="assets/srtx-logo.jpg">
 <style>
@@ -12,164 +12,130 @@
 .student-brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:900;font-size:17px;padding:4px 8px 24px}
 .student-brand img{width:38px;height:38px;border-radius:10px;object-fit:cover}
 .student-nav{display:grid;gap:7px}
-.student-nav a,.student-nav button{display:flex;align-items:center;gap:11px;width:100%;border:0;background:transparent;color:#dfe4ff;text-decoration:none;padding:12px 13px;border-radius:11px;font:600 14px inherit;cursor:pointer;text-align:left}
-.student-nav a:hover,.student-nav a.active,.student-nav button:hover{background:rgba(255,255,255,.1);color:#fff}
+.student-nav button{display:flex;align-items:center;gap:11px;width:100%;border:0;background:transparent;color:#dfe4ff;text-decoration:none;padding:12px 13px;border-radius:11px;font:600 14px inherit;cursor:pointer;text-align:left}
+.student-nav button:hover,.student-nav button.active{background:rgba(255,255,255,.1);color:#fff}
 .student-logout{margin-top:auto}
 .student-main{margin-left:250px;min-height:100vh}
 .student-content{max-width:1180px;margin:auto;padding:38px 24px}
 .student-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:24px}
 .student-top h1{margin:7px 0 5px}
 .student-mobilebar{display:none}
-.dash-card{height:100%}
+.view{display:none}
+.view.active{display:block}
 .mini-list{display:grid;gap:8px;margin:15px 0;color:#555}
+.account-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.info-row{padding:14px 0;border-bottom:1px solid #e8ebf3}
+.info-row:last-child{border-bottom:0}
+.info-label{font-size:12px;font-weight:800;color:#74798b;text-transform:uppercase;letter-spacing:.04em;margin-bottom:5px}
+.info-value{font-weight:700;color:#20243a;word-break:break-word}
+.material-card{height:100%}
 @media(max-width:800px){
-  .student-sidebar{transform:translateX(-100%);transition:.25s}
-  .student-sidebar.open{transform:translateX(0)}
-  .student-main{margin-left:0}
-  .student-content{padding:82px 16px 28px}
-  .student-mobilebar{display:flex;position:fixed;left:0;right:0;top:0;height:62px;background:#10152f;color:#fff;z-index:8999;align-items:center;gap:12px;padding:10px 14px;box-shadow:0 5px 20px rgba(0,0,0,.15)}
-  .student-menu{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:9px;width:42px;height:42px;font-size:22px}
-  .student-mobilebar strong{font-size:15px}
+ .student-sidebar{transform:translateX(-100%);transition:.25s}
+ .student-sidebar.open{transform:translateX(0)}
+ .student-main{margin-left:0}
+ .student-content{padding:82px 16px 28px}
+ .student-mobilebar{display:flex;position:fixed;left:0;right:0;top:0;height:62px;background:#10152f;color:#fff;z-index:8999;align-items:center;gap:12px;padding:10px 14px;box-shadow:0 5px 20px rgba(0,0,0,.15)}
+ .student-menu{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:9px;width:42px;height:42px;font-size:22px}
+ .student-mobilebar strong{font-size:15px}
+ .account-grid{grid-template-columns:1fr}
 }
-
 .student-overlay{display:none}
-@media(max-width:800px){
-  .student-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8998}
-  .student-overlay.show{display:block}
-}
-.student-nav a:focus-visible,.student-nav button:focus-visible{outline:2px solid #7aa2ff;outline-offset:2px}
+@media(max-width:800px){.student-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8998}.student-overlay.show{display:block}}
+.student-nav button:focus-visible{outline:2px solid #7aa2ff;outline-offset:2px}
 </style>
 </head>
 <body class="student-shell">
 <aside id="studentSidebar" class="student-sidebar">
-  <a class="student-brand" href="student.html">
-    <img src="assets/srtx-logo.jpg" alt="SURAJTRADERX">
-    <span>SURAJTRADERX</span>
-  </a>
-  <nav class="student-nav" aria-label="Student navigation">
-    <a class="active" href="student.html" data-close-sidebar>⌂ <span>Dashboard</span></a>
-    <a href="#account" data-close-sidebar>◉ <span>My Account</span></a>
-    <a href="#courses" data-close-sidebar>▣ <span>My Course</span></a>
-    <a href="#materials" data-close-sidebar>◫ <span>Materials</span></a>
-    <a href="#enrollment" data-close-sidebar>✓ <span>Enrollment</span></a>
-  </nav>
-  <div class="student-logout">
-    <button type="button" onclick="signOut()">↪ <span>Logout</span></button>
-  </div>
+ <a class="student-brand" href="student.html"><img src="assets/srtx-logo.jpg" alt="SURAJTRADERX"><span>SURAJTRADERX</span></a>
+ <nav class="student-nav" aria-label="Student navigation">
+  <button type="button" data-view="dashboard" class="active">⌂ <span>Dashboard</span></button>
+  <button type="button" data-view="account">◉ <span>My Account</span></button>
+  <button type="button" data-view="course">▣ <span>My Course</span></button>
+  <button type="button" data-view="materials">◫ <span>Materials</span></button>
+  <button type="button" data-view="enrollment">✓ <span>Enrollment</span></button>
+ </nav>
+ <div class="student-logout"><button type="button" onclick="signOut()">↪ <span>Logout</span></button></div>
 </aside>
 <div id="studentOverlay" class="student-overlay" onclick="closeStudentSidebar()"></div>
-<div class="student-mobilebar">
-  <button class="student-menu" type="button" onclick="toggleStudentSidebar()" aria-label="Open menu">☰</button>
-  <strong>SURAJTRADERX · Student Portal</strong>
-</div>
+<div class="student-mobilebar"><button class="student-menu" type="button" onclick="toggleStudentSidebar()" aria-label="Open menu">☰</button><strong>SURAJTRADERX · Student Portal</strong></div>
 
-<main class="student-main">
-<section class="student-content">
-  <div id="account" class="student-top">
-    <div>
-      <span class="tag">Student portal</span>
-      <h1 id="welcome">My learning</h1>
-      <p class="muted">Your approved courses, materials and enrollment.</p>
-    </div>
-    <button class="btn" type="button" onclick="signOut()">Logout</button>
-  </div>
+<main class="student-main"><section class="student-content">
+ <div id="view-dashboard" class="view active">
+  <div class="student-top"><div><span class="tag">Dashboard</span><h1 id="welcome">My learning</h1><p class="muted">Your student portal overview.</p></div><button class="btn" type="button" onclick="signOut()">Logout</button></div>
+  <div id="dashboardState" class="grid grid-2"><div class="card"><h2>Checking access…</h2><p class="muted">Loading your enrollment.</p></div></div>
+ </div>
 
-  <div id="state" class="grid grid-2">
-    <div class="card"><h2>Checking access…</h2><p class="muted">Loading your enrollment.</p></div>
-  </div>
+ <div id="view-account" class="view">
+  <div class="student-top"><div><span class="tag">My Account</span><h1>Account details</h1><p class="muted">Your student account information.</p></div></div>
+  <div class="card"><div class="account-grid">
+   <div class="info-row"><div class="info-label">Full name</div><div id="accountName" class="info-value">Loading…</div></div>
+   <div class="info-row"><div class="info-label">Email</div><div id="accountEmail" class="info-value">Loading…</div></div>
+   <div class="info-row"><div class="info-label">Account ID</div><div id="accountId" class="info-value">Loading…</div></div>
+   <div class="info-row"><div class="info-label">Account status</div><div class="info-value">Active</div></div>
+  </div></div>
+ </div>
 
-  <div id="courses" style="margin-top:28px"></div>
-  <div id="materials" style="margin-top:28px"></div>
-  <div id="enrollment" style="margin-top:28px"></div>
-</section>
-</main>
+ <div id="view-course" class="view">
+  <div class="student-top"><div><span class="tag">My Course</span><h1>My approved course</h1><p class="muted">Open your unlocked course and lessons.</p></div></div>
+  <div id="courseList" class="grid grid-2"><div class="card"><h2>Loading…</h2></div></div>
+ </div>
+
+ <div id="view-materials" class="view">
+  <div class="student-top"><div><span class="tag">Materials</span><h1>Course materials</h1><p class="muted">Only materials included in your approved plan are shown here.</p></div></div>
+  <div id="materialsList" class="grid grid-2"><div class="card"><h2>Loading…</h2></div></div>
+ </div>
+
+ <div id="view-enrollment" class="view">
+  <div class="student-top"><div><span class="tag">Enrollment</span><h1>My enrollment</h1><p class="muted">Your approved enrollment and product status.</p></div></div>
+  <div id="enrollmentList" class="grid grid-2"><div class="card"><h2>Loading…</h2></div></div>
+ </div>
+</section></main>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script src="app.js"></script>
-<script src="supabase.js"></script>
+<script src="config.js"></script><script src="app.js"></script><script src="supabase.js"></script>
 <script>
-function closeStudentSidebar(){
-  const side=document.getElementById("studentSidebar");
-  const overlay=document.getElementById("studentOverlay");
-  side?.classList.remove("open");
-  overlay?.classList.remove("show");
+function closeStudentSidebar(){document.getElementById('studentSidebar')?.classList.remove('open');document.getElementById('studentOverlay')?.classList.remove('show')}
+function toggleStudentSidebar(){const s=document.getElementById('studentSidebar');const o=document.getElementById('studentOverlay');const open=s?.classList.toggle('open');o?.classList.toggle('show',!!open)}
+function showView(name){
+ document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+ document.getElementById('view-'+name)?.classList.add('active');
+ document.querySelectorAll('.student-nav button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===name));
+ closeStudentSidebar();
+ window.scrollTo({top:0,behavior:'smooth'});
+ history.replaceState(null,'','#'+name);
 }
-function toggleStudentSidebar(){
-  const side=document.getElementById("studentSidebar");
-  const overlay=document.getElementById("studentOverlay");
-  const open=side?.classList.toggle("open");
-  overlay?.classList.toggle("show",!!open);
-}
-document.querySelectorAll("[data-close-sidebar]").forEach(a=>{
-  a.addEventListener("click",()=>setTimeout(closeStudentSidebar,0));
-});
-window.addEventListener("resize",()=>{if(window.innerWidth>800)closeStudentSidebar()});
+document.querySelectorAll('.student-nav button[data-view]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+window.addEventListener('resize',()=>{if(innerWidth>800)closeStudentSidebar()});
+window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(['dashboard','account','course','materials','enrollment'].includes(h))showView(h)});
+
 (async()=>{
-  try{
-    const S=await initSB();
-    const u=await requireUser();
-    if(!S||!u)return;
+ try{
+  const S=await initSB(); const u=await requireUser(); if(!S||!u)return;
+  const {data:p}=await S.from('profiles').select('full_name,email').eq('id',u.id).maybeSingle();
+  const name=p?.full_name||u.user_metadata?.full_name||'Student';
+  document.getElementById('welcome').textContent=`Welcome, ${name} 👋`;
+  document.getElementById('accountName').textContent=name;
+  document.getElementById('accountEmail').textContent=p?.email||u.email||'—';
+  document.getElementById('accountId').textContent=u.id;
 
-    const {data:p}=await S.from("profiles").select("full_name,email").eq("id",u.id).maybeSingle();
-    const name=p?.full_name||u.user_metadata?.full_name||"Student";
-    document.getElementById("welcome").textContent=`Welcome, ${name} 👋`;
-
-    const {data:enr,error}=await S.from("enrollments").select("*,courses(*)").eq("user_id",u.id).eq("status","active");
-    const el=document.getElementById("state");
-
-    if(error){
-      el.innerHTML=`<div class="card"><h2>Could not load your access</h2><p class="muted">${esc(error.message)}</p></div>`;
-      return;
-    }
-
-    if(!enr?.length){
-      el.innerHTML='<div class="card"><span class="tag">Locked</span><h2>Course not unlocked yet.</h2><p class="muted">Submit your UTR and wait for manual payment verification.</p><a class="btn btn-blue" href="payment.html">Go to Payment</a></div>';
-      document.getElementById("courses").innerHTML="";
-      document.getElementById("materials").innerHTML="";
-      document.getElementById("enrollment").innerHTML='<div class="card"><span class="tag">Enrollment</span><h2>Waiting for approval</h2><p class="muted">Your course access will appear here after payment is manually verified.</p></div>';
-      return;
-    }
-
-    el.innerHTML=enr.map(e=>{
-      const renewal=String(e.plan||"").toLowerCase()==="renewal";
-      const premium=String(e.plan||"").toLowerCase()==="premium";
-      const plan=renewal?"Premium Telegram Renewal · ₹699":premium?"Premium · ₹2,499":"Basic · ₹1,499";
-      const title=renewal?"Premium Telegram Renewal":(e.courses?.title||"NIFTY 15-Minute Breakout Strategy");
-      const desc=renewal?"Separate product. This access includes only the Premium Telegram channel.":(e.courses?.description||"");
-      const features=renewal
-        ? '<span>✓ Premium Telegram access</span><span>✓ Separate from NIFTY course</span>'
-        : `<span>✓ Course material PDF 1</span>${premium?'<span>✓ Premium PDF 2</span>':''}<span>✓ ${premium?'Telegram 1 + Premium Telegram 2':'Telegram learning channel'}</span>${premium?'<span>✓ Daily live doubt solving + mentorship</span>':'<span>✓ Weekly live doubt solving on Telegram</span>'}`;
-      return `<div class="card dash-card">
-        <span class="tag">Unlocked · ${esc(plan)}</span>
-        <h2>${esc(title)}</h2>
-        <p class="muted">${esc(desc)}</p>
-        <div class="mini-list">${features}</div>
-        <a class="btn btn-dark" href="course.html?id=${encodeURIComponent(e.course_id)}">Open ${renewal?'Renewal':'My Course'} →</a>
-      </div>`;
-    }).join("");
-
-    document.getElementById("courses").innerHTML=`<div class="card"><span class="tag">My Course</span><h2>Approved access</h2><p class="muted">Open the course above to view your lessons and unlocked resources.</p></div>`;
-
-    const materialText=enr.map(e=>{
-      const renewal=String(e.plan||"").toLowerCase()==="renewal";
-      const premium=String(e.plan||"").toLowerCase()==="premium";
-      return renewal
-        ? '<div class="card"><span class="tag">Materials</span><h2>Premium Telegram Renewal</h2><p class="muted">This separate ₹699 product provides Premium Telegram access only.</p></div>'
-        : `<div class="card"><span class="tag">Materials</span><h2>${premium?'Premium':'Basic'} course materials</h2><p class="muted">Your unlocked PDFs and Telegram resources are available inside My Course.</p></div>`;
-    }).join("");
-    document.getElementById("materials").innerHTML=materialText;
-
-    document.getElementById("enrollment").innerHTML=enr.map(e=>{
-      const renewal=String(e.plan||"").toLowerCase()==="renewal";
-      const premium=String(e.plan||"").toLowerCase()==="premium";
-      const plan=renewal?"Premium Telegram Renewal · ₹699":premium?"Premium · ₹2,499":"Basic · ₹1,499";
-      return `<div class="card"><span class="tag">Enrollment · Active</span><h2>${esc(plan)}</h2><p class="muted">${renewal?'Separate Premium Telegram product.':'Your approved NIFTY trading course enrollment.'}</p></div>`;
-    }).join("");
-
-  }catch(error){
-    document.getElementById("state").innerHTML=`<div class="card"><h2>Student area could not load</h2><p class="muted">${esc(error?.message||"Please refresh the page.")}</p></div>`;
+  const {data:enr,error}=await S.from('enrollments').select('*,courses(*)').eq('user_id',u.id).eq('status','active');
+  if(error) throw error;
+  const dash=document.getElementById('dashboardState'), courses=document.getElementById('courseList'), mats=document.getElementById('materialsList'), ens=document.getElementById('enrollmentList');
+  if(!enr?.length){
+   const locked='<div class="card"><span class="tag">Locked</span><h2>No approved enrollment yet</h2><p class="muted">Submit your UTR and wait for manual payment verification.</p><a class="btn btn-blue" href="payment.html">Go to Payment</a></div>';
+   dash.innerHTML=locked; courses.innerHTML=locked; mats.innerHTML='<div class="card"><span class="tag">Materials</span><h2>Nothing unlocked yet</h2><p class="muted">Materials will appear after your payment is approved.</p></div>'; ens.innerHTML='<div class="card"><span class="tag">Enrollment</span><h2>Waiting for approval</h2><p class="muted">Your enrollment will appear here after payment is manually verified.</p></div>';
+   return;
   }
+  const planInfo=e=>{const plan=String(e.plan||'').toLowerCase();return {renewal:plan==='renewal',premium:plan==='premium',label:plan==='renewal'?'Premium Telegram Renewal · ₹699':plan==='premium'?'Premium · ₹2,499':'Basic · ₹1,499'}};
+  dash.innerHTML=enr.map(e=>{const x=planInfo(e);const title=x.renewal?'Premium Telegram Renewal':(e.courses?.title||'NIFTY 15-Minute Breakout Strategy');return `<div class="card"><span class="tag">Unlocked · ${esc(x.label)}</span><h2>${esc(title)}</h2><p class="muted">${esc(x.renewal?'Separate Premium Telegram product.':(e.courses?.description||''))}</p><a class="btn btn-dark" href="course.html?id=${encodeURIComponent(e.course_id)}">Open ${x.renewal?'Renewal':'My Course'} →</a></div>`}).join('');
+  courses.innerHTML=enr.map(e=>{const x=planInfo(e);const title=x.renewal?'Premium Telegram Renewal':(e.courses?.title||'NIFTY 15-Minute Breakout Strategy');return `<div class="card"><span class="tag">${esc(x.label)}</span><h2>${esc(title)}</h2><p class="muted">${esc(x.renewal?'Separate ₹699 product with Premium Telegram access only.':(e.courses?.description||'Your approved NIFTY trading course.'))}</p><a class="btn btn-blue" href="course.html?id=${encodeURIComponent(e.course_id)}">Open Course →</a></div>`}).join('');
+  mats.innerHTML=enr.map(e=>{const x=planInfo(e);if(x.renewal)return `<div class="card material-card"><span class="tag">Premium Telegram</span><h2>Renewal access</h2><p class="muted">This separate ₹699 product includes Premium Telegram access only.</p><a class="btn btn-blue" href="course.html?id=${encodeURIComponent(e.course_id)}">Open Access →</a></div>`;return `<div class="card material-card"><span class="tag">${x.premium?'Premium':'Basic'} materials</span><h2>${x.premium?'Premium course materials':'Trading course material'}</h2><p class="muted">Your unlocked PDF resources are available inside your course page.</p><a class="btn btn-blue" href="course.html?id=${encodeURIComponent(e.course_id)}">Open Materials →</a></div>`}).join('');
+  ens.innerHTML=enr.map(e=>{const x=planInfo(e);return `<div class="card"><span class="tag">Enrollment · Active</span><h2>${esc(x.label)}</h2><p class="muted">${x.renewal?'Separate Premium Telegram product.':'Approved NIFTY trading course enrollment.'}</p><p class="muted">Status: <strong>Active</strong></p></div>`}).join('');
+  const initial=location.hash.replace('#',''); if(['dashboard','account','course','materials','enrollment'].includes(initial))showView(initial);
+ }catch(error){
+  const msg=esc(error?.message||'Please refresh the page.');
+  ['dashboardState','courseList','materialsList','enrollmentList'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=`<div class="card"><h2>Student area could not load</h2><p class="muted">${msg}</p></div>`});
+ }
 })();
 </script>
 </body>
