@@ -31,6 +31,13 @@
   .student-menu{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:9px;width:42px;height:42px;font-size:22px}
   .student-mobilebar strong{font-size:15px}
 }
+
+.student-overlay{display:none}
+@media(max-width:800px){
+  .student-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8998}
+  .student-overlay.show{display:block}
+}
+.student-nav a:focus-visible,.student-nav button:focus-visible{outline:2px solid #7aa2ff;outline-offset:2px}
 </style>
 </head>
 <body class="student-shell">
@@ -40,18 +47,19 @@
     <span>SURAJTRADERX</span>
   </a>
   <nav class="student-nav" aria-label="Student navigation">
-    <a class="active" href="student.html">⌂ <span>Dashboard</span></a>
-    <a href="#account">◉ <span>My Account</span></a>
-    <a href="#courses">▣ <span>My Course</span></a>
-    <a href="#materials">◫ <span>Materials</span></a>
-    <a href="#enrollment">✓ <span>Enrollment</span></a>
+    <a class="active" href="student.html" data-close-sidebar>⌂ <span>Dashboard</span></a>
+    <a href="#account" data-close-sidebar>◉ <span>My Account</span></a>
+    <a href="#courses" data-close-sidebar>▣ <span>My Course</span></a>
+    <a href="#materials" data-close-sidebar>◫ <span>Materials</span></a>
+    <a href="#enrollment" data-close-sidebar>✓ <span>Enrollment</span></a>
   </nav>
   <div class="student-logout">
     <button type="button" onclick="signOut()">↪ <span>Logout</span></button>
   </div>
 </aside>
+<div id="studentOverlay" class="student-overlay" onclick="closeStudentSidebar()"></div>
 <div class="student-mobilebar">
-  <button class="student-menu" type="button" onclick="document.getElementById('studentSidebar').classList.toggle('open')" aria-label="Open menu">☰</button>
+  <button class="student-menu" type="button" onclick="toggleStudentSidebar()" aria-label="Open menu">☰</button>
   <strong>SURAJTRADERX · Student Portal</strong>
 </div>
 
@@ -81,6 +89,22 @@
 <script src="app.js"></script>
 <script src="supabase.js"></script>
 <script>
+function closeStudentSidebar(){
+  const side=document.getElementById("studentSidebar");
+  const overlay=document.getElementById("studentOverlay");
+  side?.classList.remove("open");
+  overlay?.classList.remove("show");
+}
+function toggleStudentSidebar(){
+  const side=document.getElementById("studentSidebar");
+  const overlay=document.getElementById("studentOverlay");
+  const open=side?.classList.toggle("open");
+  overlay?.classList.toggle("show",!!open);
+}
+document.querySelectorAll("[data-close-sidebar]").forEach(a=>{
+  a.addEventListener("click",()=>setTimeout(closeStudentSidebar,0));
+});
+window.addEventListener("resize",()=>{if(window.innerWidth>800)closeStudentSidebar()});
 (async()=>{
   try{
     const S=await initSB();
