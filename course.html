@@ -1,4 +1,4 @@
-<!doctype html>
+          <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -104,6 +104,31 @@
     padding:7px 9px;
   }
 }
+
+/* Student portal shell */
+.portal-sidebar{position:fixed;left:0;top:0;bottom:0;width:250px;background:#10152f;color:#fff;padding:22px 16px;z-index:9000;display:flex;flex-direction:column}
+.portal-brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:900;font-size:17px;padding:4px 8px 24px}
+.portal-brand img{width:38px;height:38px;border-radius:10px;object-fit:cover}
+.portal-nav{display:grid;gap:7px}
+.portal-nav a,.portal-nav button{display:flex;align-items:center;gap:11px;width:100%;border:0;background:transparent;color:#dfe4ff;text-decoration:none;padding:12px 13px;border-radius:11px;font:600 14px inherit;cursor:pointer;text-align:left}
+.portal-nav a:hover,.portal-nav a.active,.portal-nav button:hover{background:rgba(255,255,255,.1);color:#fff}
+.portal-logout{margin-top:auto}
+.portal-main{margin-left:250px;min-height:100vh}
+.portal-mobilebar{display:none}
+.portal-overlay{display:none}
+@media(max-width:800px){
+  .portal-sidebar{transform:translateX(-100%);transition:.25s}
+  .portal-sidebar.open{transform:translateX(0)}
+  .portal-main{margin-left:0}
+  .portal-mobilebar{display:flex;position:fixed;left:0;right:0;top:0;height:62px;background:#10152f;color:#fff;z-index:8999;align-items:center;gap:12px;padding:10px 14px;box-shadow:0 5px 20px rgba(0,0,0,.15)}
+  .portal-menu{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:9px;width:42px;height:42px;font-size:22px}
+  .portal-mobilebar strong{font-size:15px}
+  .portal-overlay.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:8998}
+  .portal-main .section{padding-top:70px}
+}
+@media(max-width:800px){.topbar,.nav{display:none!important}}
+.pdf-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.pdf-download{background:#fff!important;color:#171c4a!important;border:1px solid #d7dbea!important}
 </style>
 </head>
 
@@ -140,7 +165,26 @@
  .course-mobilebar button{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:9px;width:42px;height:42px;font-size:22px}
 }
 </style><div class="course-shell-content">
-<main>
+<aside id="portalSidebar" class="portal-sidebar">
+  <a class="portal-brand" href="student.html">
+    <img src="assets/srtx-logo.jpg" alt="SURAJTRADERX">
+    <span>SURAJTRADERX</span>
+  </a>
+  <nav class="portal-nav" aria-label="Student navigation">
+    <a href="student.html">⌂ <span>Dashboard</span></a>
+    <a href="student.html#account">◉ <span>My Account</span></a>
+    <a class="active" href="student.html#courses">▣ <span>My Course</span></a>
+    <a href="student.html#materials">◫ <span>Materials</span></a>
+    <a href="student.html#enrollment">✓ <span>Enrollment</span></a>
+  </nav>
+  <div class="portal-logout"><button type="button" onclick="signOut()">↪ <span>Logout</span></button></div>
+</aside>
+<div id="portalOverlay" class="portal-overlay" onclick="closePortalSidebar()"></div>
+<div class="portal-mobilebar">
+  <button class="portal-menu" type="button" onclick="togglePortalSidebar()" aria-label="Open menu">☰</button>
+  <strong>SURAJTRADERX · Student Portal</strong>
+</div>
+<main class="portal-main">
 <section class="section">
 
 <div class="container">
@@ -234,6 +278,21 @@
 
 
 <script>
+function closePortalSidebar(){
+  document.getElementById("portalSidebar")?.classList.remove("open");
+  document.getElementById("portalOverlay")?.classList.remove("show");
+}
+function togglePortalSidebar(){
+  const s=document.getElementById("portalSidebar");
+  const o=document.getElementById("portalOverlay");
+  const open=s?.classList.toggle("open");
+  o?.classList.toggle("show",!!open);
+}
+document.querySelectorAll(".portal-nav a").forEach(a=>{
+  a.addEventListener("click",()=>setTimeout(closePortalSidebar,0));
+});
+window.addEventListener("resize",()=>{if(window.innerWidth>800)closePortalSidebar()});
+
 
 /* =========================================
    BASIC HELPERS
@@ -908,6 +967,12 @@ document.addEventListener(
             >
               Open PDF ↗
             </button>
+            <a class="btn pdf-download" href="${PDF2}" download="premium-material-2.pdf" target="_blank" rel="noopener">
+              Download PDF ↓
+            </a>
+            <a class="btn pdf-download" href="${PDF1}" download="course-material-1.pdf" target="_blank" rel="noopener">
+              Download PDF ↓
+            </a>
 
           </div>
 
