@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Student Login — SURAJTRADERX</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/jpeg" href="assets/srtx-logo.jpg">
+<style>
+.auth-wrap{min-height:70vh;display:grid;place-items:center;padding:40px 16px;background:linear-gradient(135deg,#f7f9ff,#eef2ff)}
+.auth-card{width:min(480px,100%);background:#fff;border:1px solid #e3e8f2;border-radius:26px;padding:28px;box-shadow:0 20px 60px rgba(30,50,100,.10)}
+.auth-card h1{margin:12px 0 8px}.auth-card .lead{margin-bottom:22px}.auth-msg{display:none;margin:14px 0;padding:13px 15px;border-radius:13px;line-height:1.5;font-size:14px}.auth-msg.show{display:block}.auth-msg.error{background:#fff1f2;border:1px solid #fecdd3;color:#b42318}.auth-msg.success{background:#ecfdf3;border:1px solid #b7ebca;color:#087443}.auth-links{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:15px}.text-btn{border:0;background:none;padding:0;color:#3158c7;font-weight:800;cursor:pointer}.back-link{display:inline-block;margin-top:20px;color:#667085}
+</style>
+</head>
+<body>
+<div class="topbar">SURAJTRADERX • Student Learning Portal</div>
+<header class="nav"><div class="container nav-inner"><a class="brand" href="index.html"><img class="brand-logo" src="assets/srtx-logo.jpg" alt="SURAJTRADERX"><span>SURAJTRADERX</span></a><nav class="nav-links"><a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a></nav><button class="hamb" aria-label="Open menu"><span></span><span></span><span></span></button></div></header>
+<main class="auth-wrap">
+  <div class="auth-card">
+    <span class="tag">Secure student access</span>
+    <h1>Welcome back.</h1>
+    <p class="lead">Login to open your approved courses and resources.</p>
+    <div id="msg" class="auth-msg"></div>
+    <form id="loginForm" class="form">
+      <div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required placeholder="you@example.com"></div>
+      <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" required placeholder="Your password"></div>
+      <button id="loginBtn" class="btn btn-blue" type="submit">Login</button>
+    </form>
+    <div class="auth-links">
+      <button class="text-btn" id="forgotBtn" type="button">Forgot password?</button>
+      <a href="apply.html">Create account</a>
+    </div>
+    <a class="back-link" href="index.html">← Back to website</a>
+  </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const sb=window.supabase.createClient(SRTX_CONFIG.SUPABASE_URL,SRTX_CONFIG.SUPABASE_ANON_KEY);
+const msg=document.getElementById('msg');
+function show(type,text){msg.className='auth-msg show '+type;msg.textContent=text}
+function resetUrl(){return new URL('reset-password.html',location.href).href}
+async function redirectAfterLogin(){
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user){location.href='login.html';return}
+  const {data:admin}=await sb.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle();
+  location.href=admin?.user_id?'admin.html':'student.html';
+}
+document.getElementById('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const btn=document.getElementById('loginBtn');btn.disabled=true;btn.textContent='Logging in…';
+  const email=document.getElementById('email').value.trim();const password=document.getElementById('password').value;
+  const {error}=await sb.auth.signInWithPassword({email,password});
+  if(error){show('error',error.message);btn.disabled=false;btn.textContent='Login';return}
+  await redirectAfterLogin();
+});
+document.getElementById('forgotBtn').addEventListener('click',async()=>{
+  const email=document.getElementById('email').value.trim();
+  if(!email){show('error','Enter your account email first, then tap Forgot password.');return}
+  const btn=document.getElementById('forgotBtn');btn.disabled=true;btn.textContent='Sending…';
+  const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:resetUrl()});
+  btn.disabled=false;btn.textContent='Forgot password?';
+  if(error){show('error','Could not send reset link: '+error.message);return}
+  show('success','Password reset link sent. Check your email and open the link on this device.');
+});
+</script>
+</body>
+</html>
