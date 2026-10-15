@@ -6,33 +6,80 @@
 <title>Student Dashboard — SURAJTRADERX</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" type="image/jpeg" href="assets/srtx-logo.jpg">
+<style>
+.student-shell{min-height:100vh;background:#f6f8fc}
+.student-sidebar{position:fixed;left:0;top:0;bottom:0;width:250px;background:#10152f;color:#fff;padding:22px 16px;z-index:9000;display:flex;flex-direction:column}
+.student-brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:900;font-size:17px;padding:4px 8px 24px}
+.student-brand img{width:38px;height:38px;border-radius:10px;object-fit:cover}
+.student-nav{display:grid;gap:7px}
+.student-nav a,.student-nav button{display:flex;align-items:center;gap:11px;width:100%;border:0;background:transparent;color:#dfe4ff;text-decoration:none;padding:12px 13px;border-radius:11px;font:600 14px inherit;cursor:pointer;text-align:left}
+.student-nav a:hover,.student-nav a.active,.student-nav button:hover{background:rgba(255,255,255,.1);color:#fff}
+.student-logout{margin-top:auto}
+.student-main{margin-left:250px;min-height:100vh}
+.student-content{max-width:1180px;margin:auto;padding:38px 24px}
+.student-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:24px}
+.student-top h1{margin:7px 0 5px}
+.student-mobilebar{display:none}
+.dash-card{height:100%}
+.mini-list{display:grid;gap:8px;margin:15px 0;color:#555}
+@media(max-width:800px){
+  .student-sidebar{transform:translateX(-100%);transition:.25s}
+  .student-sidebar.open{transform:translateX(0)}
+  .student-main{margin-left:0}
+  .student-content{padding:82px 16px 28px}
+  .student-mobilebar{display:flex;position:fixed;left:0;right:0;top:0;height:62px;background:#10152f;color:#fff;z-index:8999;align-items:center;gap:12px;padding:10px 14px;box-shadow:0 5px 20px rgba(0,0,0,.15)}
+  .student-menu{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:9px;width:42px;height:42px;font-size:22px}
+  .student-mobilebar strong{font-size:15px}
+}
+</style>
 </head>
-<body data-page="">
-<div class="topbar">Educational platform • Trading involves risk • No profit guarantees</div>
-<header class="nav">
-  <div class="container nav-inner">
-    <a class="brand" href="index.html"><img class="brand-logo" src="assets/srtx-logo.jpg" alt="SURAJTRADERX logo"><span>SURAJTRADERX</span></a>
-    <nav class="nav-links">
-      <a href="index.html">Home</a><a href="curriculum.html">Curriculum</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a><a class="nav-cta" href="login.html">Student Login</a>
-    </nav>
-    <button class="hamb" aria-label="Open menu"><span></span><span></span><span></span></button>
+<body class="student-shell">
+<aside id="studentSidebar" class="student-sidebar">
+  <a class="student-brand" href="student.html">
+    <img src="assets/srtx-logo.jpg" alt="SURAJTRADERX">
+    <span>SURAJTRADERX</span>
+  </a>
+  <nav class="student-nav" aria-label="Student navigation">
+    <a class="active" href="student.html">⌂ <span>Dashboard</span></a>
+    <a href="#account">◉ <span>My Account</span></a>
+    <a href="#courses">▣ <span>My Course</span></a>
+    <a href="#materials">◫ <span>Materials</span></a>
+    <a href="#enrollment">✓ <span>Enrollment</span></a>
+  </nav>
+  <div class="student-logout">
+    <button type="button" onclick="signOut()">↪ <span>Logout</span></button>
   </div>
-  <div class="container mobile-menu"><a href="index.html">Home</a><a href="curriculum.html">Curriculum</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a><a href="login.html">Student Login</a></div>
-</header>
-<main>
-<section class="section">
-<div class="container">
-  <div class="dash-top">
-    <div><span class="tag">Student area</span><h1 id="welcome">My learning</h1><p class="muted">Your approved courses and resources.</p></div>
-    <button class="btn" onclick="signOut()">Logout</button>
-  </div>
-  <div id="state" class="grid grid-2"><div class="card"><h2>Checking access…</h2><p class="muted">Loading your enrollment.</p></div></div>
+</aside>
+<div class="student-mobilebar">
+  <button class="student-menu" type="button" onclick="document.getElementById('studentSidebar').classList.toggle('open')" aria-label="Open menu">☰</button>
+  <strong>SURAJTRADERX · Student Portal</strong>
 </div>
+
+<main class="student-main">
+<section class="student-content">
+  <div id="account" class="student-top">
+    <div>
+      <span class="tag">Student portal</span>
+      <h1 id="welcome">My learning</h1>
+      <p class="muted">Your approved courses, materials and enrollment.</p>
+    </div>
+    <button class="btn" type="button" onclick="signOut()">Logout</button>
+  </div>
+
+  <div id="state" class="grid grid-2">
+    <div class="card"><h2>Checking access…</h2><p class="muted">Loading your enrollment.</p></div>
+  </div>
+
+  <div id="courses" style="margin-top:28px"></div>
+  <div id="materials" style="margin-top:28px"></div>
+  <div id="enrollment" style="margin-top:28px"></div>
 </section>
 </main>
-<div data-footer></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script><script src="app.js"></script><script src="supabase.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+<script src="supabase.js"></script>
 <script>
 (async()=>{
   try{
@@ -41,7 +88,8 @@
     if(!S||!u)return;
 
     const {data:p}=await S.from("profiles").select("full_name,email").eq("id",u.id).maybeSingle();
-    document.getElementById("welcome").textContent=`Welcome${p?.full_name?", "+p.full_name:""} 👋`;
+    const name=p?.full_name||u.user_metadata?.full_name||"Student";
+    document.getElementById("welcome").textContent=`Welcome, ${name} 👋`;
 
     const {data:enr,error}=await S.from("enrollments").select("*,courses(*)").eq("user_id",u.id).eq("status","active");
     const el=document.getElementById("state");
@@ -53,27 +101,46 @@
 
     if(!enr?.length){
       el.innerHTML='<div class="card"><span class="tag">Locked</span><h2>Course not unlocked yet.</h2><p class="muted">Submit your UTR and wait for manual payment verification.</p><a class="btn btn-blue" href="payment.html">Go to Payment</a></div>';
+      document.getElementById("courses").innerHTML="";
+      document.getElementById("materials").innerHTML="";
+      document.getElementById("enrollment").innerHTML='<div class="card"><span class="tag">Enrollment</span><h2>Waiting for approval</h2><p class="muted">Your course access will appear here after payment is manually verified.</p></div>';
       return;
     }
 
     el.innerHTML=enr.map(e=>{
-      const renewal=e.plan==="renewal";
-      const premium=e.plan==="premium";
+      const renewal=String(e.plan||"").toLowerCase()==="renewal";
+      const premium=String(e.plan||"").toLowerCase()==="premium";
       const plan=renewal?"Premium Telegram Renewal · ₹699":premium?"Premium · ₹2,499":"Basic · ₹1,499";
       const title=renewal?"Premium Telegram Renewal":(e.courses?.title||"NIFTY 15-Minute Breakout Strategy");
       const desc=renewal?"Separate product. This access includes only the Premium Telegram channel.":(e.courses?.description||"");
-
       const features=renewal
         ? '<span>✓ Premium Telegram access</span><span>✓ Separate from NIFTY course</span>'
         : `<span>✓ Course material PDF 1</span>${premium?'<span>✓ Premium PDF 2</span>':''}<span>✓ ${premium?'Telegram 1 + Premium Telegram 2':'Telegram learning channel'}</span>${premium?'<span>✓ Daily live doubt solving + mentorship</span>':'<span>✓ Weekly live doubt solving on Telegram</span>'}`;
-
-      return `<div class="card">
+      return `<div class="card dash-card">
         <span class="tag">Unlocked · ${esc(plan)}</span>
         <h2>${esc(title)}</h2>
         <p class="muted">${esc(desc)}</p>
         <div class="mini-list">${features}</div>
         <a class="btn btn-dark" href="course.html?id=${encodeURIComponent(e.course_id)}">Open ${renewal?'Renewal':'My Course'} →</a>
       </div>`;
+    }).join("");
+
+    document.getElementById("courses").innerHTML=`<div class="card"><span class="tag">My Course</span><h2>Approved access</h2><p class="muted">Open the course above to view your lessons and unlocked resources.</p></div>`;
+
+    const materialText=enr.map(e=>{
+      const renewal=String(e.plan||"").toLowerCase()==="renewal";
+      const premium=String(e.plan||"").toLowerCase()==="premium";
+      return renewal
+        ? '<div class="card"><span class="tag">Materials</span><h2>Premium Telegram Renewal</h2><p class="muted">This separate ₹699 product provides Premium Telegram access only.</p></div>'
+        : `<div class="card"><span class="tag">Materials</span><h2>${premium?'Premium':'Basic'} course materials</h2><p class="muted">Your unlocked PDFs and Telegram resources are available inside My Course.</p></div>`;
+    }).join("");
+    document.getElementById("materials").innerHTML=materialText;
+
+    document.getElementById("enrollment").innerHTML=enr.map(e=>{
+      const renewal=String(e.plan||"").toLowerCase()==="renewal";
+      const premium=String(e.plan||"").toLowerCase()==="premium";
+      const plan=renewal?"Premium Telegram Renewal · ₹699":premium?"Premium · ₹2,499":"Basic · ₹1,499";
+      return `<div class="card"><span class="tag">Enrollment · Active</span><h2>${esc(plan)}</h2><p class="muted">${renewal?'Separate Premium Telegram product.':'Your approved NIFTY trading course enrollment.'}</p></div>`;
     }).join("");
 
   }catch(error){
