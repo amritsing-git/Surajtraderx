@@ -107,50 +107,39 @@
 </style>
 </head>
 
-<body data-page="">
-
-<div class="topbar">
-  Educational platform • Trading involves risk • No profit guarantees
-</div>
-
-<header class="nav">
-  <div class="container nav-inner">
-
-    <a class="brand" href="index.html">
-      <img
-        class="brand-logo"
-        src="assets/srtx-logo.jpg"
-        alt="SURAJTRADERX logo"
-      >
-      <span>SURAJTRADERX</span>
-    </a>
-
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="curriculum.html">Curriculum</a>
-      <a href="pricing.html">Pricing</a>
-      <a href="contact.html">Contact</a>
-      <a class="nav-cta" href="student.html">My Dashboard</a>
-    </nav>
-
-    <button class="hamb" type="button" aria-label="Open menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
-
-  </div>
-
-  <div class="container mobile-menu">
-    <a href="index.html">Home</a>
-    <a href="curriculum.html">Curriculum</a>
-    <a href="pricing.html">Pricing</a>
-    <a href="contact.html">Contact</a>
-    <a href="student.html">My Dashboard</a>
-  </div>
-</header>
-
-
+<body class="course-shell" data-page="">
+<aside id="courseSidebar" class="student-sidebar">
+  <a class="student-brand" href="student.html"><img src="assets/srtx-logo.jpg" alt="SURAJTRADERX"><span>SURAJTRADERX</span></a>
+  <nav class="student-nav" aria-label="Student navigation">
+    <a href="student.html">⌂ <span>Dashboard</span></a>
+    <a href="student.html#account">◉ <span>My Account</span></a>
+    <a class="active" href="student.html#courses">▣ <span>My Course</span></a>
+    <a href="student.html#materials">◫ <span>Materials</span></a>
+    <a href="student.html#enrollment">✓ <span>Enrollment</span></a>
+  </nav>
+  <div class="student-logout"><button type="button" onclick="signOut()">↪ <span>Logout</span></button></div>
+</aside>
+<div class="course-mobilebar"><button type="button" onclick="document.getElementById('courseSidebar').classList.toggle('open')" aria-label="Open menu">☰</button><strong>SURAJTRADERX · Student Portal</strong></div>
+<style>
+.student-sidebar{position:fixed;left:0;top:0;bottom:0;width:250px;background:#10152f;color:#fff;padding:22px 16px;z-index:9000;display:flex;flex-direction:column}
+.student-brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:900;font-size:17px;padding:4px 8px 24px}
+.student-brand img{width:38px;height:38px;border-radius:10px;object-fit:cover}
+.student-nav{display:grid;gap:7px}
+.student-nav a,.student-nav button{display:flex;align-items:center;gap:11px;width:100%;border:0;background:transparent;color:#dfe4ff;text-decoration:none;padding:12px 13px;border-radius:11px;font:600 14px inherit;cursor:pointer;text-align:left}
+.student-nav a:hover,.student-nav a.active,.student-nav button:hover{background:rgba(255,255,255,.1);color:#fff}
+.student-logout{margin-top:auto}
+.course-shell{margin-left:250px;min-height:100vh}
+.course-shell-content{min-height:100vh}
+.course-mobilebar{display:none}
+@media(max-width:800px){
+ .course-shell-content main{padding-top:58px}
+ .student-sidebar{transform:translateX(-100%);transition:.25s}
+ .student-sidebar.open{transform:translateX(0)}
+ .course-shell{margin-left:0}
+ .course-mobilebar{display:flex;position:fixed;left:0;right:0;top:0;height:62px;background:#10152f;color:#fff;z-index:8999;align-items:center;gap:12px;padding:10px 14px;box-shadow:0 5px 20px rgba(0,0,0,.15)}
+ .course-mobilebar button{border:0;background:rgba(255,255,255,.1);color:#fff;border-radius:9px;width:42px;height:42px;font-size:22px}
+}
+</style><div class="course-shell-content">
 <main>
 <section class="section">
 
@@ -178,6 +167,7 @@
 
 
 <div data-footer></div>
+</div>
 
 
 <!-- PDF VIEWER -->
