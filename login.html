@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="topbar">SURAJTRADERX • Student Learning Portal</div>
-<header class="nav"><div class="container nav-inner"><a class="brand" href="index.html"><img class="brand-logo" src="assets/srtx-logo.jpg" alt="SURAJTRADERX"><span>SURAJTRADERX</span></a><nav class="nav-links"><a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a></nav><button class="hamb" aria-label="Open menu"><span></span><span></span><span></span></button></div></header>
+<header class="nav"><div class="container nav-inner"><a class="brand" href="index.html"><img class="brand-logo" src="assets/srtx-logo.jpg" alt="SURAJTRADERX"><span>SURAJTRADERX</span></a><nav class="nav-links"><a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a></nav><button class="hamb" id="loginMenuBtn" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button></div><div class="container mobile-menu" id="loginMobileMenu"><a href="index.html">Home</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a></div></header>
 <main class="auth-wrap">
   <div class="auth-card">
     <span class="tag">Secure student access</span>
@@ -63,6 +63,20 @@ document.getElementById('forgotBtn').addEventListener('click',async()=>{
   if(error){show('error','Could not send reset link: '+error.message);return}
   show('success','Password reset link sent. Check your email and open the link on this device.');
 });
+
+const loginMenuBtn=document.getElementById('loginMenuBtn');
+const loginMobileMenu=document.getElementById('loginMobileMenu');
+loginMenuBtn.addEventListener('click',()=>{
+  loginMobileMenu.classList.toggle('active');
+  const open=loginMobileMenu.classList.contains('active');
+  loginMenuBtn.setAttribute('aria-label',open?'Close menu':'Open menu');
+  loginMenuBtn.setAttribute('aria-expanded',String(open));
+});
+loginMobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+  loginMobileMenu.classList.remove('active');
+  loginMenuBtn.setAttribute('aria-label','Open menu');
+  loginMenuBtn.setAttribute('aria-expanded','false');
+}));
 </script>
 </body>
 </html>
